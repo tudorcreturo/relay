@@ -45,7 +45,7 @@ Each session follows the same cycle:
 2. **Startup check:** build and quick tests (or load the site locally), to catch anything the previous session left broken.
 3. **One slice:** one visible result, a checkable "done when", the files it may touch, the right model, 40-50 minutes.
 4. **Verify** against "done when".
-5. **Close:** commit locally (if you agreed), update the three files, name the session.
+5. **Close:** commit locally (if you agreed), update the three files. Every session is titled `relay MM/DD HH:MM <slice>` (for example `relay 11/23 18:51 gallery`), so it is easy to find later.
 6. **Resume choice, made for you:** under ~150k tokens and a short break → continue in the same chat while the cache is warm; otherwise → a new chat with `/relay`.
 
 Hard stop at 80% of the usage window. You don't need to run to 100%: the remaining 15-20% stays free for other productive sessions.

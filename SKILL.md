@@ -21,6 +21,17 @@ Every `/relay` session gets a title in one format, so sessions are easy to find 
 - Set it as soon as the slice is chosen: `/rename` in the terminal, or the app's session-title tool if one is available. Keep the start time; if the slice changes, change only the last part.
 - Helper sessions you start get the same format, with their own slice id.
 
+## First answer: the slice and the estimate
+
+The user usually reads the first answer, walks away, and comes back 20-40 minutes later in a new chat. So the first answer after `/relay` always says:
+
+- **Where we are:** one line from `STATE.md`.
+- **Working on:** the slice, by id and in plain words (for example "3, real content: texts and optimized images").
+- **Estimate:** a realistic range in minutes and the expected finish time (for example "35-50 minutes, done around 19:40"). Count the whole path to a verified, saved slice: building, tests, browser checks, fixes. Base it on how long similar slices took in `LOG.md`, not on optimism. If the slice looks longer than 50 minutes, split it and estimate only the first part.
+- **Model:** the recommended one, if different from the session's.
+
+The estimate appears **once**, in the first answer. Do not repeat or update it along the way.
+
 ## A. New idea (`/relay` plus an idea, no plan for it yet)
 
 1. Ask at most 3 questions, only the ones that change the result. Decide the rest yourself, pick the most sensible option, and mark it "provisional" in `PLAN.md`.
@@ -37,7 +48,7 @@ Every `/relay` session gets a title in one format, so sessions are easy to find 
 2. If `plan/` holds several projects, ask which one.
 3. Read only: `STATE.md`, the slice table in `PLAN.md`, the last 2 entries of `LOG.md`, `git log --oneline -5` and `git status` (if the project uses git). Nothing else in full.
 4. Startup check: build and run the quick tests, or load the site locally, to catch anything the previous session left broken. If the project has a check script (for example `scripts/check.sh`), run that. If it fails, fixing it is today's slice.
-5. Set the session title (see "Session title"), then report in 3 lines: where we are, today's slice, the recommended model. If the session runs on a different model than the slice needs, say so.
+5. Set the session title (see "Session title"), then give the first answer (see "First answer"). If the session runs on a different model than the slice needs, say so.
 6. Work on one slice only. If it turns out bigger, split it in `PLAN.md` and finish only the first part.
 
 ## C. Close ("close the session", the slice is done, or usage reaches 80%)

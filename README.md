@@ -41,7 +41,7 @@ The state lives inside your project, in `plan/<project>/`:
 
 Each session follows the same cycle:
 
-1. **Read the state:** only `STATE.md`, the slice table, and the last 2 log entries.
+1. **Read the state:** only `STATE.md`, the slice table, and the last 2 log entries. The first answer says which slice comes next and how long it should realistically take, with a finish time, so you can walk away and come back.
 2. **Startup check:** build and quick tests (or load the site locally), to catch anything the previous session left broken.
 3. **One slice:** one visible result, a checkable "done when", the files it may touch, the right model, 40-50 minutes.
 4. **Verify** against "done when".

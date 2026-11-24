@@ -36,17 +36,21 @@ The state lives inside your project, in `plan/<project>/`:
 | File | Holds | Size |
 |---|---|---|
 | `PLAN.md` | goal, your decisions, standing agreements, the slice table | a page or two |
-| `STATE.md` | where you stopped, current slice, exact next step, how to resume | under 30 lines |
-| `LOG.md` | one short entry per session, newest first | grows, but only the last 2 entries are read |
+| `STATE.md` | where you stopped, current slice, exact next step, git hash at close, parking lot | under 30 lines |
+| `LOG.md` | one short entry per session, newest first, with estimated and real minutes and usage % | grows, but only the last 2 entries are read |
+| `.active` | empty lock file, so two chats never work on the same project | ignored by git |
+
+See [`examples/portfolio/`](examples/portfolio/) for the three files filled in.
 
 Each session follows the same cycle:
 
 1. **Read the state:** only `STATE.md`, the slice table, and the last 2 log entries. The first answer says which slice comes next and how long it should realistically take, with a finish time, so you can walk away and come back.
-2. **Startup check:** build and quick tests (or load the site locally), to catch anything the previous session left broken.
-3. **One slice:** one visible result, a checkable "done when", the files it may touch, the right model, 40-50 minutes.
-4. **Verify** against "done when".
-5. **Close:** commit locally (if you agreed), update the three files. Every session is titled `relay MM/DD HH:MM <slice>` (for example `relay 11/23 18:51 gallery`), so it is easy to find later.
-6. **Resume choice, made for you:** under ~150k tokens and a short break → continue in the same chat while the cache is warm; otherwise → a new chat with `/relay`.
+2. **Lock and stale check:** if another chat holds the lock, stop. If git `HEAD` differs from the hash in `STATE.md`, or the tree is dirty, work happened outside relay and the state is reconciled first.
+3. **Startup check:** build and quick tests (or load the site locally), to catch anything the previous session left broken.
+4. **One slice:** one visible result, a checkable "done when", the files it may touch, the right model, 40-50 minutes. A rollback point is marked first. Mid-slice ideas go to the parking lot. After two failed attempts at the same problem, the slice is split or parked.
+5. **Verify** against "done when".
+6. **Close:** commit locally (if you agreed), update the three files, log estimated vs real minutes. Every session is titled `relay MM/DD HH:MM <slice>` (for example `relay 11/23 18:51 gallery`), so it is easy to find later.
+7. **Resume choice, made for you:** under ~150k tokens and a short break → continue in the same chat while the cache is warm; otherwise → a new chat with `/relay`.
 
 Hard stop at 80% of the usage window. You don't need to run to 100%: the remaining 15-20% stays free for other productive sessions.
 
@@ -79,6 +83,18 @@ Or for a single project: copy `SKILL.md` to `.claude/skills/relay/SKILL.md` insi
 | "close the session" | verify, save, write the resume note, tell you how to continue |
 
 Example: `/relay Add a portfolio page with projects grouped by category and a full-screen gallery.`
+
+## relay and Anthropic's long-running harness
+
+relay builds on the pattern in [Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents): a progress file, one feature per session, a startup check.
+
+| From the harness | Added by relay |
+|---|---|
+| progress file, one feature per session, startup check | the usage window as a design constraint: hard stop at 80%, new chat instead of `/compact` |
+| | a realistic time estimate in the first answer, learned from logged est vs real minutes |
+| | the resume choice (same chat or new chat) made for you, from context size and cache age |
+| | a session lock, a stale-state check against git, and a rollback point per slice |
+| | one worker at a time, with an explicit model per helper |
 
 ## Tips that are easy to miss
 
